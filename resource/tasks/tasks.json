@@ -1839,27 +1839,28 @@
         "action": "ClickSelf",
         "template": "RecruitNowConfirm.png",
         "roi": [586, 399, 694, 192],
-        "next": [
-            "RecruitingActivitiesRecruitSkip",
-            "RecruitingActivitiesRecruitNowConfirm",
-            "RecruitingActivitiesRecruitSkipWithoutButton"
-        ]
+        "next": ["RecruitingActivitiesRecruit", "RecruitingActivitiesRecruitNowConfirm"]
     },
     "RecruitingActivitiesRecruitSkip": {
         "action": "ClickSelf",
         "template": "RecruitSkip.png",
         "roi": [1100, 0, 180, 150],
-        "next": ["RecruitingActivitiesRecruitSkip", "RecruitingActivitiesRecruitSkipWithoutButton"]
+        "next": ["RecruitingActivitiesTaskPlugin"]
     },
-    "RecruitingActivitiesRecruitSkipWithoutButton": {
-        "action": "ClickRect",
+    "RecruitingActivitiesTaskPlugin": {
+        "Doc": "RecruitingActivitiesTaskPlugin.cpp",
+        "algorithm": "OcrDetect",
+        "text": [],
+        "fullMatch": true,
+        "roi": [600, 492, 664, 77],
+        "next": ["RecruitingActivitiesRecruitExit"]
+    },
+    "RecruitingActivitiesRecruitExit": {
         "algorithm": "JustReturn",
-        "specificRect": [1180, 15, 85, 60],
-        "next": [
-            "RecruitingActivitiesRecruitEnd",
-            "RecruitingActivitiesRecruitSkip",
-            "RecruitingActivitiesRecruitSkipWithoutButton"
-        ]
+        "action": "ClickRect",
+        "postDelay": 1000,
+        "specificRect": [500, 400, 500, 300],
+        "next": ["RecruitingActivitiesRecruitEnd", "RecruitingActivitiesRecruitExit"]
     },
     "RecruitingActivitiesRecruitEnd": {
         "algorithm": "OcrDetect",

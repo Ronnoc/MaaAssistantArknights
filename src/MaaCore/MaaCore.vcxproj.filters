@@ -309,6 +309,9 @@
     <ClInclude Include="Task\Interface\RecruitTask.h">
       <Filter>Source\Task\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Task\Interface\RecruitingActivitiesTaskPlugin.h">
+      <Filter>Source\Task\Interface</Filter>
+    </ClInclude>
     <ClInclude Include="Task\Interface\RoguelikeTask.h">
       <Filter>Source\Task\Interface</Filter>
     </ClInclude>
@@ -898,6 +901,9 @@
     <ClCompile Include="Task\Interface\RecruitTask.cpp">
       <Filter>Source\Task\Interface</Filter>
     </ClCompile>
+    <ClInclude Include="Task\Interface\RecruitingActivitiesTaskPlugin.cpp">
+      <Filter>Source\Task\Interface</Filter>
+    </ClInclude>
     <ClCompile Include="Task\Interface\RoguelikeTask.cpp">
       <Filter>Source\Task\Interface</Filter>
     </ClCompile>

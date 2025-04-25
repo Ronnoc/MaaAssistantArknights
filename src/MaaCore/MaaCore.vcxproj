@@ -200,6 +200,7 @@
     <ClInclude Include="Task\Interface\InfrastTask.h" />
     <ClInclude Include="Task\Interface\MallTask.h" />
     <ClInclude Include="Task\Interface\RecruitTask.h" />
+    <ClInclude Include="Task\Interface\RecruitingActivitiesTaskPlugin.h" />
     <ClInclude Include="Task\Interface\RoguelikeTask.h" />
     <ClInclude Include="Task\Interface\StartUpTask.h" />
     <ClInclude Include="Task\Miscellaneous\AutoRecruitTask.h" />
@@ -391,6 +392,7 @@
     <ClCompile Include="Task\Interface\InfrastTask.cpp" />
     <ClCompile Include="Task\Interface\MallTask.cpp" />
     <ClCompile Include="Task\Interface\RecruitTask.cpp" />
+    <ClInclude Include="Task\Interface\RecruitingActivitiesTaskPlugin.cpp" />
     <ClCompile Include="Task\Interface\RoguelikeTask.cpp" />
     <ClCompile Include="Task\Interface\StartUpTask.cpp" />
     <ClCompile Include="Task\Miscellaneous\AutoRecruitTask.cpp" />
