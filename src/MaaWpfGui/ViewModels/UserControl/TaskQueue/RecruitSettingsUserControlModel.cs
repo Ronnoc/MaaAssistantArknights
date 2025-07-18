@@ -337,7 +337,7 @@ public class RecruitSettingsUserControlModel : TaskViewModel
             UseExpedited = recruit.UseExpedited,
             ExpeditedTimes = recruit.MaxTimes,
             SelectExtraTags = recruit.ExtraTagMode,
-            Level3FirstList = recruit.Level3PreferTags.Cast<CombinedData>().Select(i => i.Value).ToList(), // todo 要改
+            Level3FirstList = recruit.Level3PreferTags,
             NotChooseLevel1 = recruit.Level1NotChoose,
             ChooseLevel3Time = recruit.Level3Time,
             ChooseLevel4Time = recruit.Level4Time,

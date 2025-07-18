@@ -89,30 +89,6 @@ public class CustomSettingsUserControlModel : TaskViewModel
         return task.Serialize();
     }
 
-    public List<(AsstTaskType Type, JObject Params)> SerializeMultiTasks()
-    {
-        if (string.IsNullOrWhiteSpace(TaskName))
-        {
-            return [];
-        }
-
-        if (!TaskName.Contains(';'))
-        {
-            return [Serialize()];
-        }
-
-        var taskGroups = TaskName.Split(';', StringSplitOptions.RemoveEmptyEntries);
-
-        return taskGroups.Select(group => new AsstCustomTask()
-        {
-            CustomTasks = group.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(task => task.Trim())
-                    .ToList(),
-        })
-            .Select(task => task.Serialize())
-            .ToList();
-    }
-
     public override bool? SerializeTask(BaseTask baseTask, int? taskId = null)
     {
         if (baseTask is not CustomTask custom)
@@ -122,7 +98,7 @@ public class CustomSettingsUserControlModel : TaskViewModel
 
         var task = new AsstCustomTask()
         {
-            // CustomTasks = [.. custom.TaskName.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(task => task.Trim())],
+           // CustomTasks = [.. custom.TaskName.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(task => task.Trim())],
         };
         if (taskId is int id)
         {
