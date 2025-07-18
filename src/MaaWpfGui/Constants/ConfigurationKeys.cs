@@ -139,14 +139,13 @@ namespace MaaWpfGui.Constants
         public const string RoguelikeStartWithEliteTwo = "Roguelike.RoguelikeStartWithEliteTwo"; // 已迁移
         public const string RoguelikeOnlyStartWithEliteTwo = "Roguelike.RoguelikeOnlyStartWithEliteTwo"; // 已迁移
         public const string RoguelikeStartWithSelectList = "Roguelike.RoguelikeStartWithSelectList";
-        public const string RoguelikeEnableNonfriendSupport = "Roguelike.RoguelikeEnableNonfriendSupport";
+        public const string RoguelikeEnableNonfriendSupport = "Roguelike.RoguelikeEnableNonfriendSupport"; // 已迁移
         public const string Roguelike3FirstFloorFoldartal = "Roguelike.Roguelike3FirstFloorFoldartal"; // 已迁移
         public const string Roguelike3FirstFloorFoldartals = "Roguelike.Roguelike3StartFloorFoldartal"; // 已迁移
         public const string Roguelike3NewSquad2StartingFoldartal = "Roguelike.Roguelike3NewSquad2StartingFoldartal"; // 已迁移
         public const string Roguelike3NewSquad2StartingFoldartals = "Roguelike.Roguelike3NewSquad2StartingFoldartals"; // 已迁移
         public const string RoguelikeExpectedCollapsalParadigms = "Roguelike.RoguelikeExpectedCollapsalParadigms"; // 已迁移
         public const string RoguelikeUseSupportUnit = "Roguelike.RoguelikeUseSupportUnit"; // 已迁移
-        public const string RoguelikeEnableNonfriendSupport = "Roguelike.RoguelikeEnableNonfriendSupport"; // 已迁移
         public const string RoguelikeDelayAbortUntilCombatComplete = "Roguelike.RoguelikeDelayAbortUntilCombatComplete";
         public const string RoguelikeStartsCount = "Roguelike.StartsCount"; // 已迁移
         public const string RoguelikeInvestmentEnabled = "Roguelike.InvestmentEnabled"; // 已迁移
