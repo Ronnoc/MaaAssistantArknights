@@ -573,41 +573,40 @@ public class RoguelikeSettingsUserControlModel : TaskViewModel
     /// <summary>
     /// Gets the available start with rewards dictionary based on current theme.
     /// </summary>
-    public List<GenericCombinedData<string>> RoguelikeStartAwards { get; private set; } = [];
+    public List<GenericCombinedData<RoguelikeCollectibleAward>> RoguelikeStartAwards { get; private set; } = [];
 
     private void UpdateRoguelikeStartWithAllDict()
     {
-        var config = ConfigurationHelper.GetGlobalValue(ConfigurationKeys.RoguelikeStartWithSelectList, "Roguelike@LastReward Roguelike@LastReward4").Split(' ');
-        var list = new List<GenericCombinedData<string>>()
+        var config = GetTaskConfig<RoguelikeTask>()?.CollectibleStartAwards ?? default;
+        var list = new List<GenericCombinedData<RoguelikeCollectibleAward>>()
         {
-           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithKettle"), Value = "Roguelike@LastReward" },
-           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithShield"), Value = "Roguelike@LastReward2" },
-           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithIngot"), Value = "Roguelike@LastReward3" },
-           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithHope"), Value = "Roguelike@LastReward4" },
-           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithRandomReward"), Value = "Roguelike@LastRewardRand" },
+           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithKettle"), Value = RoguelikeCollectibleAward.HotWater },
+           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithShield"), Value = RoguelikeCollectibleAward.Shield },
+           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithIngot"), Value = RoguelikeCollectibleAward.Ingot },
+           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithHope"), Value = RoguelikeCollectibleAward.Hope },
+           new() { Display = LocalizationHelper.GetString("RoguelikeStartWithRandomReward"), Value = RoguelikeCollectibleAward.Random },
         };
         switch (RoguelikeTheme)
         {
             case Theme.Mizuki:
-                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithKey"), Value = "Mizuki@Roguelike@LastReward5" });
-                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithDice"), Value = "Mizuki@Roguelike@LastReward6" });
+                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithKey"), Value = RoguelikeCollectibleAward.Key });
+                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithDice"), Value = RoguelikeCollectibleAward.Dice });
                 break;
 
             case Theme.Sarkaz:
-                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithIdea"), Value = "Sarkaz@Roguelike@LastReward5" });
+                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithIdea"), Value = RoguelikeCollectibleAward.Idea });
                 break;
 
             case Theme.JieGarden:
-                list.RemoveAll(i => i.Value == "Roguelike@LastReward4");
-                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithTicket"), Value = "JieGarden@Roguelike@LastReward5" });
+                list.Remove(list.First(i => i.Value == RoguelikeCollectibleAward.Hope));
+                list.Add(new() { Display = LocalizationHelper.GetString("RoguelikeStartWithTicket"), Value = RoguelikeCollectibleAward.Ticket });
                 break;
         }
 
         RoguelikeStartAwards = list;
         OnPropertyChanged(nameof(RoguelikeStartAwards));
-        RoguelikeStartWithSelectList = RoguelikeStartAwards.Where(i => config.Contains(i.Value)).ToArray();
+        RoguelikeStartWithSelectList = RoguelikeStartAwards.Where(i => config.HasFlag(i.Value)).ToArray();
     }
-
 
     public object[] RoguelikeStartWithSelectList
     {
@@ -616,6 +615,7 @@ public class RoguelikeSettingsUserControlModel : TaskViewModel
             var value = GetTaskConfig<RoguelikeTask>()?.CollectibleStartAwards ?? default;
             return RoguelikeStartAwards.Where(v => value.HasFlag(v.Value)).ToArray();
         }
+
         set
         {
             var v = value.Cast<GenericCombinedData<RoguelikeCollectibleAward>>().Select(k => k.Value).Aggregate((a, b) => a | b);
@@ -1027,7 +1027,7 @@ public class RoguelikeSettingsUserControlModel : TaskViewModel
                 { RoguelikeCollectibleAward.Key, "key" },
                 { RoguelikeCollectibleAward.Dice, "dice" },
                 { RoguelikeCollectibleAward.Idea, "ideas" },
-                { "JieGarden@Roguelike@LastReward5", "ticket" },
+                { RoguelikeCollectibleAward.Ticket, "ticket" },
             };
 
             var startWithSelect = new JObject();
@@ -1050,9 +1050,76 @@ public class RoguelikeSettingsUserControlModel : TaskViewModel
             return null;
         }
 
-        var task = new AsstFightTask()
+        bool roguelikeSquadIsProfessional = roguelike.Mode == Mode.Collectible && roguelike.Theme != Theme.Phantom && roguelike.Squad is "突击战术分队" or "堡垒战术分队" or "远程战术分队" or "破坏战术分队";
+        bool roguelikeSquadIsFoldartal = roguelike.Mode == Mode.Collectible && roguelike.Theme == Theme.Sami && roguelike.Squad == "生活至上分队";
+        var task = new AsstRoguelikeTask()
         {
+            Theme = roguelike.Theme,
+            Mode = roguelike.Mode,
+            Starts = roguelike.StartCount,
+            Difficulty = roguelike.Difficulty,
+            Squad = roguelike.Squad,
+            Roles = roguelike.Roles,
+            CoreChar = DataHelper.GetCharacterByNameOrAlias(roguelike.CoreChar)?.Name ?? roguelike.CoreChar,
+            UseSupport = roguelike.UseSupport,
+            UseSupportNonFriend = roguelike.UseSupportNonFriend,
+
+            InvestmentEnabled = roguelike.Investment,
+            InvestmentCount = roguelike.InvestCount,
+            InvestmentStopWhenFull = roguelike.StopWhenDepositFull,
+            InvestmentWithMoreScore = roguelike.InvestWithMoreScore && roguelike.Mode == Mode.Investment,
+            RefreshTraderWithDice = roguelike.Theme == Theme.Mizuki && roguelike.RefreshTraderWithDice,
+
+            StopAtFinalBoss = roguelike.StopAtFinalBoss,
+            StopAtMaxLevel = roguelike.StopWhenLevelMax,
+
+            // 刷开局
+            CollectibleModeSquad = roguelike.SquadCollectible,
+            CollectibleModeShopping = roguelike.CollectibleShopping,
+            StartWithEliteTwo = (roguelike.StartWithEliteTwo && roguelikeSquadIsProfessional && roguelike.Theme == Theme.Mizuki) || roguelike.Theme == Theme.Sami,
+            StartWithEliteTwoNonBattle = (roguelike.StartWithEliteTwoOnly && roguelike.Theme == Theme.Mizuki) || roguelike.Theme == Theme.Sami,
+
+            // 月度小队
+            MonthlySquadAutoIterate = roguelike.MonthlySquadAutoIterate,
+            MonthlySquadCheckComms = roguelike.MonthlySquadCheckComms,
+
+            // 深入探索
+            DeepExplorationAutoIterate = roguelike.DeepExplorationAutoIterate,
+
+            SamiFirstFloorFoldartal = roguelike.Theme == Theme.Sami && roguelike.Mode == Mode.Collectible && roguelike.SamiFirstFloorFoldartal,
+            SamiStartFloorFoldartal = roguelike.SamiFirstFloorFoldartals,
+            SamiNewSquad2StartingFoldartal = roguelike.SamiNewSquad2StartingFoldartal && roguelikeSquadIsFoldartal,
+            SamiNewSquad2StartingFoldartals = roguelike.SamiNewSquad2StartingFoldartals.Split(';').Where(i => !string.IsNullOrEmpty(i)).Take(3).ToList(),
+
+            ExpectedCollapsalParadigms = roguelike.ExpectedCollapsalParadigms.Split(';').Where(i => !string.IsNullOrEmpty(i)).ToList(),
+
+            // StartWithSeed = roguelike.StartWithSeed && RoguelikeTheme == Theme.Sarkaz && RoguelikeMode == Mode.Investment && RoguelikeSquad is "点刺成锭分队" or "后勤分队",
         };
+
+        if (RoguelikeMode == Mode.Collectible && !RoguelikeOnlyStartWithEliteTwo)
+        {
+            var rewardKeys = new Dictionary<RoguelikeCollectibleAward, string>
+            {
+                { RoguelikeCollectibleAward.HotWater, "hot_water" },
+                { RoguelikeCollectibleAward.Shield, "shield" },
+                { RoguelikeCollectibleAward.Ingot, "ingot" },
+                { RoguelikeCollectibleAward.Hope, "hope" },
+                { RoguelikeCollectibleAward.Random, "random" },
+                { RoguelikeCollectibleAward.Key, "key" },
+                { RoguelikeCollectibleAward.Dice, "dice" },
+                { RoguelikeCollectibleAward.Idea, "ideas" },
+                { RoguelikeCollectibleAward.Ticket, "ticket" },
+            };
+
+            var startWithSelect = new JObject();
+            foreach (var select in RoguelikeStartWithSelectList.Cast<GenericCombinedData<RoguelikeCollectibleAward>>())
+            {
+                if (rewardKeys.TryGetValue(select.Value, out var paramKey))
+                {
+                    task.CollectibleModeStartRewards[paramKey] = true;
+                }
+            }
+        }
 
         if (taskId is int id)
         {
